@@ -270,6 +270,20 @@ button, input, select {
   margin: 0;
 }
 
+/* destaque temporário do plano sugerido pela dica do modo jogo */
+.z-corte-linha.z-realce-dica {
+  border-radius: var(--raio);
+  animation: z-pulso-dica 0.65s ease-out 3;
+}
+
+@keyframes z-pulso-dica {
+  0%   { background: transparent; box-shadow: 0 0 0 0 transparent; }
+  30%  { background: rgba(242, 178, 62, 0.18); box-shadow: 0 0 0 2px var(--ambar); }
+  100% { background: transparent; box-shadow: 0 0 0 0 transparent; }
+}
+
+.z-dica-plano { width: 100%; margin: 6px 0 2px; pointer-events: auto; }
+
 .z-corte-linha input[type='checkbox'] { accent-color: var(--ciano); margin: 0; }
 
 .z-corte-linha[data-ativo='true'] label { color: var(--ciano); }
@@ -479,12 +493,25 @@ button, input, select {
   left: 50%;
   transform: translateX(-50%);
   width: min(560px, calc(100% - 36px));
-  background: rgba(22, 31, 34, 0.95);
-  border: 1px solid var(--borda);
+  background: rgba(22, 31, 34, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--raio);
   padding: 16px 18px;
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
   display: none;
+  /* o painel fica bem no meio da tela, onde a maioria tenta girar o
+     modelo. Fundo bem translúcido (vidro fosco) pra não esconder o que
+     está atrás, e vazado pro clique: o arrasto atravessa até o canvas,
+     só os controles de verdade (o botão de dica) recebem o clique. */
+  pointer-events: none;
+}
+
+.z-jogo-cabecalho,
+.z-pergunta,
+.z-pergunta-descricao,
+.z-instrucao,
+.z-feedback {
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
 }
 
 .zoo3d[data-modo='jogar'] .z-jogo { display: block; }

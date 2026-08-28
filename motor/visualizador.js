@@ -93,6 +93,27 @@ export function iniciarVisualizador({
   const pmrem = new THREE.PMREMGenerator(renderizador);
   cena.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
 
+  // microrrelevo procedural: sem isso a superfície é perfeitamente lisa e
+  // fica com cara de plástico injetado, mesmo com luz e ambiente bons.
+  // Gerado uma vez em <canvas>, sem baixar nenhum asset.
+  const texturaRuido = (() => {
+    const tam = 256;
+    const canvas = document.createElement('canvas');
+    canvas.width = canvas.height = tam;
+    const ctx = canvas.getContext('2d');
+    const img = ctx.createImageData(tam, tam);
+    for (let i = 0; i < img.data.length; i += 4) {
+      const v = 128 + (Math.random() - 0.5) * 90;
+      img.data[i] = img.data[i + 1] = img.data[i + 2] = v;
+      img.data[i + 3] = 255;
+    }
+    ctx.putImageData(img, 0, 0);
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+    tex.repeat.set(7, 7);
+    return tex;
+  })();
+
   // iluminação de três pontos, complementar ao ambiente
   cena.add(new THREE.AmbientLight(0xffffff, 0.18));
   const principal = new THREE.DirectionalLight(0xfff4e2, 2.1);
@@ -165,6 +186,8 @@ export function iniciarVisualizador({
       opacity: 1,
       emissive: new THREE.Color(0x000000),
       emissiveIntensity: 1,
+      bumpMap: texturaRuido,
+      bumpScale: 0.0035 + (e.rugosidade ?? 0.68) * 0.006,
     });
     o.userData.corBase = cor.clone();
     reg.malhas.push(o);
@@ -218,6 +241,40 @@ export function iniciarVisualizador({
       const c = corte[d.chave];
       return !c.ativo || c.plano.distanceToPoint(p) >= -1e-6;
     });
+  }
+
+  // qual plano (e de que lado) melhor revela uma estrutura: o eixo em que o
+  // centro dela está mais deslocado do centro do modelo. Sem isso, achar uma
+  // estrutura interna sem corte nenhum é impossível — o clique sempre pega a
+  // camada mais externa primeiro.
+  const sugestaoPlanoCache = new Map();
+  function calcularSugestaoPlano(id) {
+    if (sugestaoPlanoCache.has(id)) return sugestaoPlanoCache.get(id);
+    const reg = porId.get(id);
+    let resultado = null;
+    if (reg && reg.malhas.length) {
+      const caixaE = new THREE.Box3();
+      reg.malhas.forEach((m) => caixaE.expandByObject(m));
+      const centroE = caixaE.getCenter(new THREE.Vector3());
+      let melhorEixo = null, melhorValor = -1, melhorSinal = 1;
+      PLANOS.forEach((p) => {
+        const meia = (tamanho[p.eixo] || 0) / 2 || 1;
+        const offset = (centroE[p.eixo] - centro[p.eixo]) / meia;
+        if (Math.abs(offset) > melhorValor) {
+          melhorValor = Math.abs(offset);
+          melhorEixo = p.chave;
+          melhorSinal = offset > 0 ? -1 : 1;
+        }
+      });
+      // a posição do corte precisa passar perto da estrutura, não no centro
+      // geral do modelo — num corpo bem alongado (caso da ascídia), um corte
+      // centralizado no eixo errado não chega nem perto dela.
+      resultado = melhorEixo
+        ? { plano: melhorEixo, sinal: melhorSinal, pos: centroE[PLANOS.find((p) => p.chave === melhorEixo).eixo] }
+        : null;
+    }
+    sugestaoPlanoCache.set(id, resultado);
+    return resultado;
   }
 
   /* ---------------- câmera ---------------- */
@@ -286,6 +343,23 @@ export function iniciarVisualizador({
   function definirFoco(novoCentro, novoRaio, animar = true) {
     focoAtual.centro.copy(novoCentro);
     focoAtual.raio = Math.max(novoRaio, raioModelo * 0.05);
+    // planos de corte que a pessoa ainda não ativou passam a partir do
+    // centro do foco atual, não do modelo inteiro. Sem isso, num modelo
+    // com vários corpos lado a lado (caso do Porifera), um corte parado
+    // no centro do conjunto todo faz um corpo inteiro sumir, em vez de
+    // cortar o que está em foco.
+    PLANOS.forEach((p) => {
+      const c = corte[p.chave];
+      if (c.ativo) return;
+      c.pos = focoAtual.centro[p.eixo];
+      const rng = raiz.querySelector(`.z-corte-linha[data-plano="${p.chave}"] input[type=range]`);
+      if (rng) {
+        rng.min = focoAtual.centro[p.eixo] - focoAtual.raio;
+        rng.max = focoAtual.centro[p.eixo] + focoAtual.raio;
+        rng.step = (focoAtual.raio * 2) / 200 || 0.01;
+        rng.value = c.pos;
+      }
+    });
     enquadrar(null, animar);
   }
 
@@ -804,6 +878,35 @@ export function iniciarVisualizador({
     });
   });
 
+  raiz.querySelector('.z-dica-plano').addEventListener('click', () => {
+    const fb = $('.z-feedback');
+    if (!est.jogo) return;
+    const q = est.jogo.perguntas[est.jogo.indice];
+    const sugestao = calcularSugestaoPlano(q.id);
+    if (!sugestao) {
+      fb.dataset.tipo = '';
+      fb.textContent = 'Essa estrutura já deveria estar visível sem nenhum corte.';
+      return;
+    }
+    const def = PLANOS.find((p) => p.chave === sugestao.plano);
+    const precisaInverter = corte[sugestao.plano].sinal !== sugestao.sinal;
+    fb.dataset.tipo = '';
+    fb.textContent = precisaInverter
+      ? `Dica: ative o plano ${def.rotulo.toLowerCase()} e clique em "inverter".`
+      : `Dica: ative o plano ${def.rotulo.toLowerCase()}.`;
+    if (!controlesVisiveis) raiz.querySelector('.z-aba-controles').click();
+    // desloca o corte pra perto da estrutura: num corpo alongado, deixar o
+    // corte no centro geral do modelo não revelaria nada.
+    corte[sugestao.plano].pos = sugestao.pos;
+    const rngAlvo = raiz.querySelector(`.z-corte-linha[data-plano="${sugestao.plano}"] input[type=range]`);
+    if (rngAlvo) rngAlvo.value = sugestao.pos;
+    atualizarCortes();
+    const linhaAlvo = raiz.querySelector(`.z-corte-linha[data-plano="${sugestao.plano}"]`);
+    linhaAlvo.classList.remove('z-realce-dica');
+    void linhaAlvo.offsetWidth; // reinicia a animação se a dica for clicada de novo
+    linhaAlvo.classList.add('z-realce-dica');
+  });
+
   $('.z-busca').addEventListener('input', (e) => { est.busca = e.target.value; renderizarLista(); });
 
   const filtros = $('.z-filtros');
@@ -967,6 +1070,7 @@ function montarHTML(M) {
       <p class="z-pergunta"></p>
       <p class="z-pergunta-descricao"></p>
       <p class="z-instrucao">Clique na estrutura correspondente no modelo.</p>
+      <button class="z-mini z-dica-plano" type="button">💡 dica de plano</button>
       <div class="z-progresso"><i style="width:0%"></i></div>
       <p class="z-feedback"></p>
     </div>
