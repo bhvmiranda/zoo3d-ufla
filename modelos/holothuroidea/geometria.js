@@ -27,7 +27,7 @@
    horizontal. Boca à frente, cloaca atrás. Essa é a origem da
    bilateralidade secundária desta classe.
 
-   Eixos: Z = eixo oral-aboral (oral em +Z) · Y = dorsal/ventral · X = lados
+   Eixos: Z = eixo oral-aboral (oral em −Z) · Y = dorsal/ventral · X = lados
    ============================================================ */
 
 import { Acervo, TAU } from '../../motor/formas.js';
@@ -49,8 +49,8 @@ export const MODELO = {
     'Número de pés ambulacrais e de papilas reduzido para manter a leitura da forma.',
   ],
   focos: [
-    { nome: 'extremidade oral', centro: [0, 0, 3.4], raio: 2.2 },
-    { nome: 'extremidade aboral', centro: [0, 0, -3.4], raio: 2.2 },
+    { nome: 'extremidade oral', centro: [0, 0, -3.4], raio: 2.2 },
+    { nome: 'extremidade aboral', centro: [0, 0, 3.4], raio: 2.2 },
     { nome: 'meio do corpo', centro: [0, 0, 0], raio: 2.2 },
     { nome: 'face ventral', centro: [0, -1.4, 0], raio: 3.4 },
   ],
@@ -334,8 +334,8 @@ export function construirGeometria(THREE) {
 
   /* -------- polos -------- */
 
-  A.cilindro('polo-oral', 0.34, 0.34, 0.06, [0, 0, COMP / 2 + 0.7], [0, 0, 1], 24);
-  A.cilindro('polo-aboral', 0.34, 0.34, 0.06, [0, 0, -COMP / 2 - 0.7], [0, 0, 1], 24);
+  A.cilindro('polo-oral', 0.34, 0.34, 0.06, [0, 0, -COMP / 2 - 0.7], [0, 0, 1], 24);
+  A.cilindro('polo-aboral', 0.34, 0.34, 0.06, [0, 0, COMP / 2 + 0.7], [0, 0, 1], 24);
 
   /* -------- boca, tentáculos, cloaca, ânus -------- */
 

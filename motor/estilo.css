@@ -489,20 +489,20 @@ button, input, select {
 
 .z-jogo {
   position: absolute;
-  top: 74px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(560px, calc(100% - 36px));
-  background: rgba(22, 31, 34, 0.4);
+  top: 68px;
+  right: 18px;
+  left: auto;
+  width: min(300px, calc(100% - 36px));
+  background: rgba(22, 31, 34, 0.55);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--raio);
-  padding: 16px 18px;
+  padding: 14px 16px;
   backdrop-filter: blur(10px);
   display: none;
-  /* o painel fica bem no meio da tela, onde a maioria tenta girar o
-     modelo. Fundo bem translúcido (vidro fosco) pra não esconder o que
-     está atrás, e vazado pro clique: o arrasto atravessa até o canvas,
-     só os controles de verdade (o botão de dica) recebem o clique. */
+  /* encostado no canto superior direito, embaixo do alternador
+     Explorar/Jogar — o centro e a maior parte da tela ficam livres pra
+     girar o modelo, que é onde o painel centralizado atrapalhava.
+     Ainda vazado pro clique: só o botão de dica recebe o clique. */
   pointer-events: none;
 }
 
@@ -806,7 +806,7 @@ button, input, select {
   .zoo3d[data-controles='oculto'] .z-aba-controles { left: 0; }
   .z-identificacao h1 { font-size: 17px; }
   .z-resumo { grid-template-columns: repeat(2, 1fr); }
-  .z-jogo { top: 66px; padding: 12px 14px; }
+  .z-jogo { top: 60px; right: 10px; width: min(230px, calc(100% - 20px)); padding: 12px 14px; }
   .z-pergunta { font-size: 19px; }
 }
 

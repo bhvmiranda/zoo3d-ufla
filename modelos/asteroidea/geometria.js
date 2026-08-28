@@ -47,9 +47,9 @@ export const MODELO = {
   ],
   focos: [
     { nome: 'disco central', centro: [0, 0.55, 0], raio: 2.3 },
-    { nome: 'um braço', centro: [3.7, 0.45, 0], raio: 2.6 },
-    { nome: 'face oral', centro: [0, -0.2, 0], raio: 4.2 },
-    { nome: 'face aboral', centro: [0, 1.2, 0], raio: 4.2 },
+    { nome: 'um braço', centro: [3.7, 0.45, 0], raio: 2.8 },
+    { nome: 'face oral', centro: [0, -0.2, 0], raio: 6.4 },
+    { nome: 'face aboral', centro: [0, 1.2, 0], raio: 6.5 },
   ],
 };
 

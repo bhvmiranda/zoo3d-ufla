@@ -49,7 +49,7 @@ export const MODELO = {
   ],
   focos: [
     { nome: 'cálice e tégmen', centro: [0, 0.35, 0], raio: 1.9 },
-    { nome: 'coroa de braços', centro: [0, 2.6, 0], raio: 4.6 },
+    { nome: 'coroa de braços', centro: [0, 1.9, 0], raio: 5.8 },
     { nome: 'pedúnculo', centro: [0, -3.4, 0], raio: 2.6 },
     { nome: 'uma pínula', centro: [2.9, 2.7, 0], raio: 1.6 },
   ],
