@@ -1,0 +1,9 @@
+*.zip
+*.bak
+.DS_Store
+
+# documentos de trabalho pessoal, não fazem parte do acervo público
+BRIEFING_CLAUDE_CODE.md
+GUIA_PUBLICACAO_E_ACESSO.md
+GUIA_PUBLICACAO_E_QR.md
+PASSO_A_PASSO.md

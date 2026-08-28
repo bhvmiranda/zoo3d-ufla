@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>ZOO3D UFLA · modelos anatômicos interativos</title>
+  <link rel="stylesheet" href="motor/estilo.css">
+  <style>
+    body { overflow-y: auto; }
+    .capa { max-width: 880px; margin: 0 auto; padding: 64px 24px 96px; }
+    .capa h1 { font-family: var(--display); font-size: clamp(34px, 6vw, 54px); font-weight: 600; margin: 0 0 6px; line-height: 1.05; }
+    .capa .sub { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--tinta-tenue); margin: 0 0 34px; }
+    .capa .intro { font-size: 16px; line-height: 1.65; color: var(--tinta-fraca); max-width: 62ch; margin: 0 0 48px; }
+    .disciplina { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--tinta-tenue); border-bottom: 1px solid var(--borda); padding-bottom: 8px; margin: 44px 0 4px; }
+    .modelo { display: flex; align-items: baseline; gap: 14px; padding: 15px 4px; border-bottom: 1px solid var(--borda); text-decoration: none; color: inherit; }
+    .modelo:hover { background: var(--painel); }
+    .modelo .cod { font-family: var(--mono); font-size: 11px; color: var(--tinta-tenue); width: 44px; flex: none; }
+    .modelo .tit { font-family: var(--display); font-size: 19px; flex: 1; }
+    .modelo .est { font-family: var(--mono); font-size: 10px; color: var(--tinta-tenue); }
+    .modelo[aria-disabled='true'] { opacity: 0.4; pointer-events: none; }
+    .rodape { margin-top: 64px; font-size: 12px; line-height: 1.6; color: var(--tinta-tenue); border-left: 2px solid var(--borda); padding-left: 14px; }
+  </style>
+</head>
+<body>
+  <main class="capa">
+    <h1>Modelos anatômicos interativos</h1>
+    <p class="sub">Setor de Zoologia · Universidade Federal de Lavras</p>
+    <p class="intro">
+      Cada modelo pode ser girado, cortado nos três planos anatômicos e explorado
+      estrutura por estrutura. O modo jogo pede uma estrutura por vez e registra a
+      pontuação em três níveis de dificuldade. Funciona no computador da sala e no
+      celular.
+    </p>
+
+    <p class="disciplina">Motor</p>
+    <a class="modelo" href="modelos/_verificacao/">
+      <span class="cod">teste</span>
+      <span class="tit">Modelo de verificação</span>
+      <span class="est">4 estruturas</span>
+    </a>
+
+    <p class="disciplina">GBI104 · Introdução aos Metazoários</p>
+    <a class="modelo" href="modelos/porifera-organizacao/">
+      <span class="cod">A2</span>
+      <span class="tit">Porifera: condições asconoide, siconoide e leuconoide</span>
+      <span class="est">14 estruturas</span>
+    </a>
+    <a class="modelo" aria-disabled="true" href="#">
+      <span class="cod">A1</span>
+      <span class="tit">Gastrulação e destino do blastóporo</span>
+      <span class="est">em produção</span>
+    </a>
+
+    <p class="disciplina">GBI109 · Zoologia de Deuterostômios · Echinodermata</p>
+    <a class="modelo" href="modelos/crinoidea/">
+      <span class="cod">A2</span>
+      <span class="tit">Crinoidea: lírio-do-mar</span>
+      <span class="est">20 estruturas</span>
+    </a>
+    <a class="modelo" href="modelos/asteroidea/">
+      <span class="cod">A2</span>
+      <span class="tit">Asteroidea: estrela-do-mar</span>
+      <span class="est">20 estruturas</span>
+    </a>
+    <a class="modelo" href="modelos/ophiuroidea/">
+      <span class="cod">A2</span>
+      <span class="tit">Ophiuroidea: serpente-do-mar</span>
+      <span class="est">21 estruturas</span>
+    </a>
+    <a class="modelo" href="modelos/echinoidea/">
+      <span class="cod">A2</span>
+      <span class="tit">Echinoidea: ouriço-do-mar</span>
+      <span class="est">25 estruturas</span>
+    </a>
+    <a class="modelo" href="modelos/holothuroidea/">
+      <span class="cod">A2</span>
+      <span class="tit">Holothuroidea: pepino-do-mar</span>
+      <span class="est">23 estruturas</span>
+    </a>
+
+    <p class="disciplina">GBI109 · Aula 3 · Hemichordata, Cephalochordata e Urochordata</p>
+    <a class="modelo" href="modelos/enteropneusta/">
+      <span class="cod">A3</span>
+      <span class="tit">Enteropneusta: verme-bolota</span>
+      <span class="est">20 estruturas</span>
+    </a>
+    <a class="modelo" href="modelos/cephalochordata/">
+      <span class="cod">A3</span>
+      <span class="tit">Cephalochordata: anfioxo</span>
+      <span class="est">22 estruturas</span>
+    </a>
+    <a class="modelo" aria-disabled="true" href="#">
+      <span class="cod">A3</span>
+      <span class="tit">Pterobranchia: colônia de pterobrânquios</span>
+      <span class="est">em produção</span>
+    </a>
+    <a class="modelo" aria-disabled="true" href="#">
+      <span class="cod">A3</span>
+      <span class="tit">Urochordata: ascídia</span>
+      <span class="est">em produção</span>
+    </a>
+    <a class="modelo" aria-disabled="true" href="#">
+      <span class="cod">A3</span>
+      <span class="tit">Metamorfose da larva de ascídia</span>
+      <span class="est">em produção</span>
+    </a>
+
+    <p class="rodape">
+      Modelos didáticos, com simplificações declaradas em cada página.
+      Não substituem a observação de espécimes reais em aula prática.
+    </p>
+  </main>
+</body>
+</html>
